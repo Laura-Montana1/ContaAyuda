@@ -1,0 +1,15 @@
+[
+  {"fecha": "2024-01-05", "monto": 1500000, "categoria": "ventas"},
+  {"fecha": "2024-01-12", "monto": 2300000, "categoria": "ventas"},
+  {"fecha": "2024-01-18", "monto": 980000,  "categoria": "ventas"},
+  {"fecha": "2024-01-25", "monto": 4100000, "categoria": "ventas"},
+  {"fecha": "2024-01-28", "monto": 750000,  "categoria": "gastos"},
+  {"fecha": "2024-02-03", "monto": 1800000, "categoria": "ventas"},
+  {"fecha": "2024-02-10", "monto": 2100000, "categoria": "ventas"},
+  {"fecha": "2024-02-20", "monto": 3200000, "categoria": "ventas"},
+  {"fecha": "2024-03-15", "monto": 4500000, "categoria": "ventas"},
+  {"fecha": "2024-03-28", "monto": 3100000, "categoria": "ventas"},
+  {"fecha": "2024-04-17", "monto": 15000000,"categoria": "ventas"},
+  {"fecha": "2024-05-04", "monto": 2200000, "categoria": "ventas"},
+  {"fecha": "2024-06-15", "monto": 2000000, "categoria": "ventas"}
+]

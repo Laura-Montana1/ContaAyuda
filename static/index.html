@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Conta Ayuda — Contabilidad para tu PyMe</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --azul:       #1e40af;
+      --azul-m:     #2563eb;
+      --azul-c:     #3b82f6;
+      --azul-l:     #93c5fd;
+      --azul-xl:    #dbeafe;
+      --azul-xxl:   #eff6ff;
+      --blanco:     #ffffff;
+      --texto:      #1e3a5f;
+      --gris:       #64748b;
+      --gris-l:     #f1f5f9;
+      --verde:      #16a34a;
+      --verde-l:    #dcfce7;
+      --rojo:       #dc2626;
+      --rojo-l:     #fee2e2;
+      --amarillo-l: #fef9c3;
+      --amarillo:   #ca8a04;
+      --sombra:     0 4px 24px rgba(37,99,235,0.10);
+      --sombra-m:   0 8px 32px rgba(37,99,235,0.18);
+      --radio:      16px;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--azul-xxl);
+      color: var(--texto);
+      min-height: 100vh;
+    }
+
+    /* ══════════════════════════════════════
+       HEADER
+    ══════════════════════════════════════ */
+    header {
+      background: linear-gradient(135deg, var(--azul) 0%, var(--azul-m) 100%);
+      padding: 0 32px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 16px rgba(30,64,175,0.30);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-marca {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .logo-circle {
+      width: 44px; height: 44px;
+      background: #fff;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      overflow: hidden;
+    }
+    .logo-circle img { width: 40px; height: 40px; object-fit: contain; }
+    header h1 { color: #fff; font-size: 1.25rem; font-weight: 900; letter-spacing: -.3px; }
+    header p  { color: var(--azul-l); font-size: 0.75rem; font-weight: 600; margin-top: 1px; }
+    .header-docs a {
+      color: var(--azul-l);
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-decoration: none;
+      border: 1.5px solid rgba(147,197,253,0.4);
+      border-radius: 8px;
+      padding: 5px 12px;
+      transition: background .2s;
+    }
+    .header-docs a:hover { background: rgba(255,255,255,0.1); }
+
+    /* ══════════════════════════════════════
+       LAYOUT
+    ══════════════════════════════════════ */
+    main { max-width: 900px; margin: 0 auto; padding: 32px 20px 60px; }
+
+    /* ══════════════════════════════════════
+       PANTALLA DE CARGA
+    ══════════════════════════════════════ */
+    #pantallaInicio { display: block; }
+    #pantallaResultados { display: none; }
+
+    .bienvenida {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .bienvenida h2 { font-size: 1.6rem; font-weight: 900; color: var(--azul); margin-bottom: 8px; }
+    .bienvenida p  { color: var(--gris); font-size: 0.95rem; font-weight: 600; }
+
+    .card {
+      background: var(--blanco);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: var(--sombra);
+      border: 1.5px solid var(--azul-xl);
+      margin-bottom: 20px;
+    }
+
+    .card-titulo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .icono-paso {
+      width: 38px; height: 38px;
+      background: var(--azul-m);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .card-titulo h3 { font-size: 1.05rem; font-weight: 800; color: var(--azul); }
+    .card-titulo p  { font-size: 0.8rem; color: var(--gris); font-weight: 600; margin-top: 2px; }
+
+    /* Zona drag & drop */
+    .zona-upload {
+      border: 2.5px dashed var(--azul-c);
+      border-radius: var(--radio);
+      padding: 40px 20px;
+      text-align: center;
+      cursor: pointer;
+      background: var(--azul-xxl);
+      transition: background .2s, border-color .2s;
+    }
+    .zona-upload:hover { background: var(--azul-xl); border-color: var(--azul-m); }
+    .zona-upload.drag  { background: var(--azul-xl); border-color: var(--azul); }
+    .zona-upload .zu-icono { font-size: 2.8rem; margin-bottom: 10px; }
+    .zona-upload .zu-titulo { font-size: 1rem; font-weight: 800; color: var(--azul-m); margin-bottom: 4px; }
+    .zona-upload .zu-sub   { font-size: 0.8rem; color: var(--gris); font-weight: 600; }
+    #inputArchivo { display: none; }
+
+    .chip-archivo {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      background: var(--azul-xl);
+      border: 1.5px solid var(--azul-l);
+      border-radius: 10px;
+      padding: 10px 16px;
+      margin-top: 14px;
+      font-weight: 700;
+      color: var(--azul);
+      font-size: 0.88rem;
+    }
+
+    /* Botón principal */
+    .btn-principal {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      background: linear-gradient(135deg, var(--azul-m), var(--azul-c));
+      color: #fff;
+      border: none;
+      border-radius: var(--radio);
+      padding: 16px;
+      font-size: 1rem;
+      font-weight: 800;
+      font-family: 'Nunito', sans-serif;
+      cursor: pointer;
+      margin-top: 18px;
+      transition: opacity .2s, transform .1s;
+      box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+    }
+    .btn-principal:hover   { opacity: .92; }
+    .btn-principal:active  { transform: scale(.98); }
+    .btn-principal:disabled { opacity: .45; cursor: not-allowed; }
+
+    .btn-secundario {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      background: var(--gris-l);
+      color: var(--gris);
+      border: none;
+      border-radius: var(--radio);
+      padding: 14px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      font-family: 'Nunito', sans-serif;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: background .2s;
+    }
+    .btn-secundario:hover { background: #e2e8f0; }
+
+    /* Loader */
+    .loader { display: none; text-align: center; padding: 24px; }
+    .loader .spinner {
+      width: 40px; height: 40px;
+      border: 4px solid var(--azul-xl);
+      border-top-color: var(--azul-m);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin: 0 auto 12px;
+    }
+    .loader p { font-weight: 700; color: var(--gris); font-size: 0.9rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Mensaje error/ok */
+    .alerta-msg {
+      display: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      margin-top: 14px;
+    }
+    .alerta-msg.ok    { background: var(--verde-l); color: var(--verde); border: 1.5px solid #86efac; }
+    .alerta-msg.error { background: var(--rojo-l);  color: var(--rojo);  border: 1.5px solid #fca5a5; }
+
+    /* Instrucciones formato */
+    .instrucciones {
+      background: var(--azul-xxl);
+      border: 1.5px solid var(--azul-xl);
+      border-radius: var(--radio);
+      padding: 18px 20px;
+      margin-top: 20px;
+    }
+    .instrucciones h4 { font-size: 0.85rem; font-weight: 800; color: var(--azul); margin-bottom: 10px; }
+    .instrucciones table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .instrucciones th { text-align: left; color: var(--gris); font-weight: 700; padding: 4px 8px; border-bottom: 1.5px solid var(--azul-xl); }
+    .instrucciones td { padding: 5px 8px; font-weight: 600; color: var(--texto); }
+    .instrucciones tr:nth-child(even) td { background: rgba(219,234,254,0.3); }
+
+    /* ══════════════════════════════════════
+       PANTALLA DE RESULTADOS
+    ══════════════════════════════════════ */
+
+    /* Encabezado resultados */
+    .res-header {
+      background: linear-gradient(135deg, var(--azul) 0%, var(--azul-m) 100%);
+      border-radius: 20px;
+      padding: 24px 28px;
+      color: #fff;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--sombra-m);
+    }
+    .res-header h2 { font-size: 1.2rem; font-weight: 900; }
+    .res-header p  { font-size: 0.8rem; color: var(--azul-l); font-weight: 600; margin-top: 3px; }
+    .res-header .badge-ok {
+      background: rgba(255,255,255,0.18);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    /* KPIs */
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .kpi {
+      background: var(--blanco);
+      border-radius: 18px;
+      padding: 22px 18px 18px;
+      box-shadow: var(--sombra);
+      border: 1.5px solid var(--azul-xl);
+      text-align: center;
+      transition: transform .15s;
+    }
+    .kpi:hover { transform: translateY(-2px); }
+    .kpi .kpi-icono { font-size: 2rem; margin-bottom: 8px; }
+    .kpi .kpi-valor { font-size: 1.55rem; font-weight: 900; color: var(--azul-m); line-height: 1; }
+    .kpi .kpi-label { font-size: 0.75rem; color: var(--gris); font-weight: 700; margin-top: 5px; text-transform: uppercase; letter-spacing: .3px; }
+
+    /* Sección resultado */
+    .res-seccion {
+      background: var(--blanco);
+      border-radius: 20px;
+      padding: 24px 24px 20px;
+      margin-bottom: 18px;
+      box-shadow: var(--sombra);
+      border: 1.5px solid var(--azul-xl);
+    }
+    .res-seccion h3 {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--azul);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Mejor / Peor mes */
+    .duo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .duo-card {
+      border-radius: 14px;
+      padding: 20px 16px;
+      text-align: center;
+    }
+    .duo-card.mejor { background: #eff6ff; border: 2px solid var(--azul-l); }
+    .duo-card.peor  { background: var(--rojo-l); border: 2px solid #fca5a5; }
+    .duo-card .dc-emoji { font-size: 2rem; margin-bottom: 6px; }
+    .duo-card .dc-label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; color: var(--gris); margin-bottom: 2px; }
+    .duo-card .dc-mes   { font-size: 1rem; font-weight: 900; color: var(--texto); }
+    .duo-card .dc-monto { font-size: 0.85rem; font-weight: 700; color: var(--gris); margin-top: 3px; }
+
+    /* Tabla tendencias */
+    .tabla-tend { width: 100%; border-collapse: collapse; }
+    .tabla-tend th {
+      text-align: left;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--gris);
+      text-transform: uppercase;
+      letter-spacing: .4px;
+      padding: 6px 10px;
+      border-bottom: 2px solid var(--azul-xl);
+    }
+    .tabla-tend td { padding: 11px 10px; font-size: 0.88rem; font-weight: 700; border-bottom: 1px solid var(--azul-xxl); }
+    .tabla-tend tr:last-child td { border-bottom: none; }
+    .tabla-tend tr:hover td { background: var(--azul-xxl); }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 0.73rem;
+      font-weight: 800;
+    }
+    .tag.crecimiento { background: #dbeafe; color: var(--azul-m); }
+    .tag.caida       { background: var(--rojo-l); color: var(--rojo); }
+    .tag.estabilidad { background: var(--amarillo-l); color: var(--amarillo); }
+    .tag.sin_referencia { background: var(--gris-l); color: var(--gris); }
+
+    /* Outliers */
+    .outlier-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #fff7ed;
+      border: 1.5px solid #fed7aa;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+    .outlier-item:last-child { margin-bottom: 0; }
+    .outlier-item .oi-icono { font-size: 1.6rem; flex-shrink: 0; }
+    .outlier-item .oi-titulo { font-size: 0.9rem; font-weight: 800; color: #92400e; }
+    .outlier-item .oi-sub    { font-size: 0.78rem; font-weight: 600; color: #b45309; margin-top: 2px; }
+
+    .sin-outliers {
+      text-align: center;
+      padding: 24px;
+      color: var(--verde);
+      font-weight: 800;
+      font-size: 0.9rem;
+      background: var(--verde-l);
+      border-radius: 12px;
+    }
+
+    /* Categorías */
+    .cat-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--azul-xxl);
+      font-size: 0.88rem;
+    }
+    .cat-item:last-child { border-bottom: none; }
+    .cat-nombre { font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .cat-monto  { font-weight: 900; color: var(--azul-m); }
+    .cat-barra-wrap { flex: 1; margin: 0 14px; height: 8px; background: var(--azul-xl); border-radius: 4px; overflow: hidden; }
+    .cat-barra { height: 100%; background: linear-gradient(90deg, var(--azul-m), var(--azul-c)); border-radius: 4px; transition: width .6s ease; }
+
+    /* Comparación mes a mes */
+    .comp-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      background: var(--azul-xxl);
+      font-size: 0.86rem;
+    }
+    .comp-item .ci-meses { font-weight: 700; color: var(--gris); }
+    .comp-item .ci-pct {
+      font-weight: 900;
+      font-size: 1rem;
+    }
+    .comp-item .ci-pct.pos { color: var(--verde); }
+    .comp-item .ci-pct.neg { color: var(--rojo); }
+    .comp-item .ci-pct.neu { color: var(--gris); }
+
+    /* ══════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════ */
+    @media (max-width: 560px) {
+      .duo-grid { grid-template-columns: 1fr; }
+      .kpis     { grid-template-columns: repeat(2, 1fr); }
+      header h1 { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="header-marca">
+    <div class="logo-circle">
+  <img src="/static/logo.png" alt="Conta Ayuda"/>
+</div>
+    <div>
+      <h1>Conta Ayuda</h1>
+      <p>Contabilidad y Análisis para tu PyMe</p>
+    </div>
+  </div>
+
+</header>
+
+<main>
+
+  <!-- ═══════════════════════════════════
+       PANTALLA DE INICIO
+  ═══════════════════════════════════ -->
+  <div id="pantallaInicio">
+
+    <div class="bienvenida">
+      <h2>¡Bienvenido a Conta Ayuda! 👋</h2>
+      <p>Sube tu archivo de ventas o gastos y en segundos verás cómo va tu negocio</p>
+    </div>
+
+    <!-- Card de carga -->
+    <div class="card">
+      <div class="card-titulo">
+        <div class="icono-paso">📂</div>
+        <div>
+          <h3>Sube tu archivo de datos</h3>
+          <p>Formatos aceptados: CSV o JSON • Hasta 50 MB</p>
+        </div>
+      </div>
+
+      <div class="zona-upload" id="zonaUpload"
+           onclick="document.getElementById('inputArchivo').click()"
+           ondragover="dragOver(event)"
+           ondragleave="dragLeave(event)"
+           ondrop="drop(event)">
+        <div class="zu-icono">📁</div>
+        <div class="zu-titulo">Toca aquí o arrastra tu archivo</div>
+        <div class="zu-sub">datos_ventas.csv &nbsp;•&nbsp; datos_gastos.json</div>
+      </div>
+      <input type="file" id="inputArchivo" accept=".csv,.json" onchange="archivoElegido(event)"/>
+
+      <div class="chip-archivo" id="chipArchivo">
+        <span>📄</span>
+        <span id="nombreArchivo">—</span>
+      </div>
+
+      <div class="alerta-msg" id="alertaCarga"></div>
+
+      <button class="btn-principal" id="btnAnalizar" onclick="analizarArchivo()" disabled>
+        🔍 Analizar mi negocio
+      </button>
+
+      <div class="loader" id="loader">
+        <div class="spinner"></div>
+        <p>Analizando tus datos con Pandas...</p>
+      </div>
+    </div>
+
+    <!-- Instrucciones -->
+    <div class="instrucciones">
+      <h4>📋 ¿Cómo debe estar organizado tu archivo?</h4>
+      <table>
+        <thead>
+          <tr><th>Columna</th><th>Qué va ahí</th><th>Ejemplo</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>fecha</strong></td><td>Fecha del registro</td><td>2024-01-15</td></tr>
+          <tr><td><strong>monto</strong></td><td>Valor en pesos</td><td>450000</td></tr>
+          <tr><td><strong>categoria</strong></td><td>Tipo de movimiento</td><td>ventas / gastos</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- fin pantallaInicio -->
+
+
+  <!-- ═══════════════════════════════════
+       PANTALLA DE RESULTADOS
+  ═══════════════════════════════════ -->
+  <div id="pantallaResultados">
+
+    <!-- Encabezado -->
+    <div class="res-header">
+      <div>
+        <h2>📊 Resultados de tu análisis</h2>
+        <p id="subtituloRes">—</p>
+      </div>
+      <div class="badge-ok">✅ Análisis completo</div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpis" id="kpis"></div>
+
+    <!-- Mejor / Peor mes (RF-08) -->
+    <div class="res-seccion">
+      <h3>🏆 Tu mejor y peor mes</h3>
+      <div class="duo-grid" id="duoMeses"></div>
+    </div>
+
+    <!-- Tendencias mensuales (RF-05) -->
+    <div class="res-seccion">
+      <h3>📅 ¿Cómo estuvo cada mes?</h3>
+      <table class="tabla-tend">
+        <thead>
+          <tr>
+            <th>Mes</th>
+            <th>Total</th>
+            <th>Tendencia</th>
+            <th>Variación</th>
+          </tr>
+        </thead>
+        <tbody id="tablaTendencias"></tbody>
+      </table>
+    </div>
+
+    <!-- Comparación mes a mes (RF-06) -->
+    <div class="res-seccion">
+      <h3>📈 Comparación mes a mes</h3>
+      <div id="comparaciones"></div>
+    </div>
+
+    <!-- Categorías (RF-04) -->
+    <div class="res-seccion">
+      <h3>🗂️ Por categoría</h3>
+      <div id="categorias"></div>
+    </div>
+
+    <!-- Outliers (RF-07) -->
+    <div class="res-seccion">
+      <h3>⚠️ Días con movimientos inusuales</h3>
+      <div id="outliers"></div>
+    </div>
+
+    <!-- Botones -->
+    <button class="btn-principal" onclick="descargarReporte()">
+      ⬇️ Descargar reporte JSON
+    </button>
+    <button class="btn-secundario" onclick="reiniciar()">
+      🔄 Analizar otro archivo
+    </button>
+
+  </div><!-- fin pantallaResultados -->
+
+</main>
+
+<script>
+  const API = '';  // mismo origen — FastAPI sirve el HTML
+  let archivoActual = null;
+
+  // ── Drag & Drop ──────────────────────────────────────
+  function dragOver(e) {
+    e.preventDefault();
+    document.getElementById('zonaUpload').classList.add('drag');
+  }
+  function dragLeave() {
+    document.getElementById('zonaUpload').classList.remove('drag');
+  }
+  function drop(e) {
+    e.preventDefault();
+    dragLeave();
+    const file = e.dataTransfer.files[0];
+    if (file) cargarArchivo(file);
+  }
+
+  function archivoElegido(e) {
+    const file = e.target.files[0];
+    if (file) cargarArchivo(file);
+  }
+
+  function cargarArchivo(file) {
+    archivoActual = file;
+    document.getElementById('nombreArchivo').textContent = file.name;
+    document.getElementById('chipArchivo').style.display = 'flex';
+    document.getElementById('btnAnalizar').disabled = false;
+    ocultarAlerta();
+  }
+
+  // ── Analizar ─────────────────────────────────────────
+  async function analizarArchivo() {
+    if (!archivoActual) return;
+
+    document.getElementById('loader').style.display = 'block';
+    document.getElementById('btnAnalizar').disabled = true;
+    ocultarAlerta();
+
+    try {
+      // RF-01: Subir archivo
+      const form = new FormData();
+      form.append('archivo', archivoActual);
+      const r1 = await fetch(`${API}/api/upload/`, { method: 'POST', body: form });
+      const d1 = await r1.json();
+      if (!r1.ok) throw new Error(d1.detail?.mensaje || JSON.stringify(d1.detail));
+
+      // RF-09: Obtener análisis completo
+      const r2 = await fetch(`${API}/api/analysis/completo`);
+      const d2 = await r2.json();
+      if (!r2.ok) throw new Error('Error al analizar los datos');
+
+      mostrarResultados(d2.analisis, d1);
+
+    } catch (err) {
+      mostrarAlerta('error', '❌ ' + err.message);
+      document.getElementById('btnAnalizar').disabled = false;
+    } finally {
+      document.getElementById('loader').style.display = 'none';
+    }
+  }
+
+  // ── Renderizar resultados ────────────────────────────
+  function mostrarResultados(a, meta) {
+    const m  = a.metricas_generales;
+    const p  = a.periodos_clave;
+    const t  = a.tendencias_mensuales;
+    const c  = a.comparacion_mes_a_mes;
+    const o  = a.outliers;
+
+    // Subtítulo
+    document.getElementById('subtituloRes').textContent =
+      `${meta.archivo} • ${meta.registros_cargados} registros • ${m.fecha_inicio} → ${m.fecha_fin}`;
+
+    // ── KPIs (RF-04) ──────────────────────────────────
+    document.getElementById('kpis').innerHTML = `
+      <div class="kpi">
+        <div class="kpi-icono">💰</div>
+        <div class="kpi-valor">${fmtCOP(m.total_monto)}</div>
+        <div class="kpi-label">Total del período</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-icono">📆</div>
+        <div class="kpi-valor">${fmtCOP(m.promedio_mensual)}</div>
+        <div class="kpi-label">Promedio mensual</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-icono">📅</div>
+        <div class="kpi-valor">${fmtCOP(m.promedio_diario)}</div>
+        <div class="kpi-label">Promedio diario</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-icono">📋</div>
+        <div class="kpi-valor">${meta.registros_cargados}</div>
+        <div class="kpi-label">Registros analizados</div>
+      </div>
+    `;
+
+    // ── Mejor / Peor mes (RF-08) ───────────────────────
+    document.getElementById('duoMeses').innerHTML = `
+      <div class="duo-card mejor">
+        <div class="dc-emoji">🥇</div>
+        <div class="dc-label">Mejor mes</div>
+        <div class="dc-mes">${fmtMes(p.mejor_periodo.periodo)}</div>
+        <div class="dc-monto">${fmtCOP(p.mejor_periodo.total_monto)}</div>
+      </div>
+      <div class="duo-card peor">
+        <div class="dc-emoji">📉</div>
+        <div class="dc-label">Peor mes</div>
+        <div class="dc-mes">${fmtMes(p.peor_periodo.periodo)}</div>
+        <div class="dc-monto">${fmtCOP(p.peor_periodo.total_monto)}</div>
+      </div>
+    `;
+
+    // ── Tendencias (RF-05) ─────────────────────────────
+    const etiq = { crecimiento:'📈 Subió', caida:'📉 Bajó', estabilidad:'➡️ Estable', sin_referencia:'— Primer mes' };
+    document.getElementById('tablaTendencias').innerHTML = t.map(mes => `
+      <tr>
+        <td>${fmtMes(mes.periodo)}</td>
+        <td>${fmtCOP(mes.total_monto)}</td>
+        <td><span class="tag ${mes.tendencia}">${etiq[mes.tendencia] || mes.tendencia}</span></td>
+        <td style="color:${mes.variacion_porcentual > 0 ? 'var(--verde)' : mes.variacion_porcentual < 0 ? 'var(--rojo)' : 'var(--gris)'}; font-weight:800">
+          ${mes.variacion_porcentual !== null ? (mes.variacion_porcentual > 0 ? '+' : '') + mes.variacion_porcentual + '%' : '—'}
+        </td>
+      </tr>`).join('');
+
+    // ── Comparación mes a mes (RF-06) ──────────────────
+    document.getElementById('comparaciones').innerHTML = c.length === 0
+      ? `<p style="color:var(--gris);font-weight:700;font-size:.88rem">Se necesitan al menos 2 meses para comparar.</p>`
+      : c.map(x => {
+          const pct = x.variacion_porcentual;
+          const cls = pct > 0 ? 'pos' : pct < 0 ? 'neg' : 'neu';
+          const flecha = pct > 0 ? '▲' : pct < 0 ? '▼' : '●';
+          return `<div class="comp-item">
+            <div class="ci-meses">${fmtMes(x.periodo_anterior)} → ${fmtMes(x.periodo_actual)}</div>
+            <div class="ci-pct ${cls}">${flecha} ${pct !== null ? (pct > 0 ? '+' : '') + pct + '%' : '—'}</div>
+          </div>`;
+        }).join('');
+
+    // ── Categorías (RF-04) ─────────────────────────────
+    const maxMonto = Math.max(...m.categorias.map(c => c.total_monto));
+    document.getElementById('categorias').innerHTML = m.categorias.map(cat => `
+      <div class="cat-item">
+        <div class="cat-nombre">🏷️ ${cat.categoria}</div>
+        <div class="cat-barra-wrap">
+          <div class="cat-barra" style="width:${(cat.total_monto/maxMonto*100).toFixed(0)}%"></div>
+        </div>
+        <div class="cat-monto">${fmtCOP(cat.total_monto)}</div>
+      </div>`).join('');
+
+    // ── Outliers (RF-07) ───────────────────────────────
+    const outEl = document.getElementById('outliers');
+    if (o.total_outliers === 0) {
+      outEl.innerHTML = `<div class="sin-outliers">✅ ¡Todo normal! No hubo días con movimientos raros.</div>`;
+    } else {
+      outEl.innerHTML = o.valores_atipicos.map(v => `
+        <div class="outlier-item">
+          <div class="oi-icono">${v.tipo === 'pico_alto' ? '🚀' : '⬇️'}</div>
+          <div>
+            <div class="oi-titulo">${v.tipo === 'pico_alto' ? 'Día con venta muy alta' : 'Día con valor muy bajo'} — ${v.fecha}</div>
+            <div class="oi-sub">Monto: ${fmtCOP(v.monto)} &nbsp;•&nbsp; ${Math.abs(v.desviaciones)}× fuera de lo normal</div>
+          </div>
+        </div>`).join('');
+    }
+
+    // Mostrar pantalla de resultados
+    document.getElementById('pantallaInicio').style.display = 'none';
+    document.getElementById('pantallaResultados').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Descargar reporte (CU-07) ────────────────────────
+  async function descargarReporte() {
+    const a = document.createElement('a');
+    a.href = `${API}/api/report/json`;
+    a.download = 'reporte_conta_ayuda.json';
+    a.click();
+  }
+
+  // ── Reiniciar ────────────────────────────────────────
+  function reiniciar() {
+    document.getElementById('pantallaInicio').style.display = 'block';
+    document.getElementById('pantallaResultados').style.display = 'none';
+    document.getElementById('inputArchivo').value = '';
+    document.getElementById('chipArchivo').style.display = 'none';
+    document.getElementById('btnAnalizar').disabled = true;
+    archivoActual = null;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Helpers ──────────────────────────────────────────
+  function mostrarAlerta(tipo, txt) {
+    const el = document.getElementById('alertaCarga');
+    el.textContent = txt;
+    el.className = `alerta-msg ${tipo}`;
+    el.style.display = 'block';
+  }
+  function ocultarAlerta() {
+    document.getElementById('alertaCarga').style.display = 'none';
+  }
+
+  function fmtCOP(v) {
+    if (v >= 1_000_000) return '$' + (v / 1_000_000).toFixed(1) + 'M';
+    if (v >= 1_000)     return '$' + (v / 1_000).toFixed(0) + 'K';
+    return '$' + Number(v).toLocaleString('es-CO');
+  }
+
+  const MESES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  function fmtMes(periodo) {
+    const [a, m] = periodo.split('-');
+    return `${MESES[parseInt(m) - 1]} ${a}`;
+  }
+</script>
+</body>
+</html>
