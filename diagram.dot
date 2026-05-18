@@ -1,0 +1,77 @@
+digraph tm {
+    graph [
+        fontname = Arial;
+        fontsize = 14;
+    ]
+    node [
+        fontname = Arial;
+        fontsize = 14;
+        rankdir = lr;
+    ]
+    edge [
+        shape = none;
+        arrowtail = onormal;
+        fontname = Arial;
+        fontsize = 12;
+    ]
+    labelloc = "t";
+    fontsize = 20;
+    nodesep = 1;
+
+    actor_UsuarioPYME_acf3059e70 [
+        shape = square;
+        color = black;
+        fontcolor = black;
+        label = "Usuario PYME";
+        margin = 0.02;
+    ]
+
+    externalentity_DashboardFrontend_88f2d9c06f [
+        shape = square;
+        color = black;
+        fontcolor = black;
+        label = "Dashboard Frontend";
+        margin = 0.02;
+    ]
+
+    process_APIContaAyudaFastAPI_579e9aae81 [
+        shape = circle;
+        color = black;
+        fontcolor = black;
+        label = "API Conta Ayuda\n(FastAPI)";
+        margin = 0.02;
+    ]
+
+    datastore_MemoriaTemporal_f2eb7a3ff7 [
+        shape = none;
+        fixedsize = shape;
+        image = "C:\Users\laura\Documents\Universidad\SoftwareIII\conta_ayuda\conta_ayuda\conta_ayuda\.venv\Lib\site-packages\pytm\images\datastore_black.png";
+        imagescale = true;
+        color = black;
+        fontcolor = black;
+        xlabel = "Memoria Temporal";
+        label = "";
+    ]
+
+    actor_UsuarioPYME_acf3059e70 -> process_APIContaAyudaFastAPI_579e9aae81 [
+        color = black;
+        fontcolor = black;
+        dir = forward;
+        label = "Carga CSV/JSON";
+    ]
+
+    externalentity_DashboardFrontend_88f2d9c06f -> process_APIContaAyudaFastAPI_579e9aae81 [
+        color = black;
+        fontcolor = black;
+        dir = forward;
+        label = "Solicitudes de\nan?lisis";
+    ]
+
+    process_APIContaAyudaFastAPI_579e9aae81 -> datastore_MemoriaTemporal_f2eb7a3ff7 [
+        color = black;
+        fontcolor = black;
+        dir = forward;
+        label = "Guardar DataFrame";
+    ]
+
+}

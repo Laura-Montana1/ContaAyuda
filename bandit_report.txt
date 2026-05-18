@@ -1,0 +1,32 @@
+Run started:2026-05-18 03:47:59.550786+00:00
+
+Test results:
+>> Issue: [B112:try_except_continue] Try, Except, Continue detected.
+   Severity: Low   Confidence: High
+   CWE: CWE-703 (https://cwe.mitre.org/data/definitions/703.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b112_try_except_continue.html
+   Location: app/utils\validation.py:32:8
+31	            return parsed
+32	        except Exception:
+33	            continue
+34	    # Último intento con inferencia automática
+
+--------------------------------------------------
+
+Code scanned:
+	Total lines of code: 577
+	Total lines skipped (#nosec): 0
+	Total potential issues skipped due to specifically being disabled (e.g., #nosec BXXX): 0
+
+Run metrics:
+	Total issues (by severity):
+		Undefined: 0
+		Low: 1
+		Medium: 0
+		High: 0
+	Total issues (by confidence):
+		Undefined: 0
+		Low: 0
+		Medium: 0
+		High: 1
+Files skipped (0):

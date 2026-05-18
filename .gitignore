@@ -1,0 +1,15 @@
+# Entorno virtual
+.venv/
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Variables de entorno
+.env
+
+# VS Code
+.vscode/
+
+SecOpsTM/
